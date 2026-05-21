@@ -139,6 +139,7 @@ public partial class GeneralSettings : Page
         TryInsertCheckbox.IsChecked = DefaultSettings.TryInsert;
         InsertDelaySeconds = DefaultSettings.InsertDelay;
         SecondsTextBox.Text = InsertDelaySeconds.ToString("##.#", System.Globalization.CultureInfo.InvariantCulture);
+        TtsSpeakWordLimitTextBox.Text = DefaultSettings.TtsSpeakWordLimit.ToString();
 
         // Context menu integration - only available for unpackaged apps
         if (!AppUtilities.IsPackaged())
@@ -177,6 +178,28 @@ public partial class GeneralSettings : Page
                 InsertDelaySeconds = 3;
                 DelayTimeErrorSeconds.Visibility = Visibility.Visible;
                 numberInputBox.BorderBrush = BadBrush;
+            }
+        }
+    }
+
+    private void TtsSpeakWordLimitTextBox_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        if (!settingsSet)
+            return;
+
+        if (sender is System.Windows.Controls.TextBox textBox)
+        {
+            bool wasAbleToConvert = int.TryParse(textBox.Text, out int parsedValue);
+            if (wasAbleToConvert && parsedValue > 0)
+            {
+                DefaultSettings.TtsSpeakWordLimit = parsedValue;
+                TtsWordLimitError.Visibility = Visibility.Collapsed;
+                textBox.BorderBrush = GoodBrush;
+            }
+            else
+            {
+                TtsWordLimitError.Visibility = Visibility.Visible;
+                textBox.BorderBrush = BadBrush;
             }
         }
     }

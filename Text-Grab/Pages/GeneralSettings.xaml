@@ -387,5 +387,37 @@
                 Keep recent history of Grabs and Edit Text Windows
             </TextBlock>
         </ui:ToggleSwitch>
+
+        <!--  TTS word limit  -->
+        <TextBlock
+            Margin="0,16,0,4"
+            FontSize="16"
+            Style="{StaticResource TextHeader}"
+            Text="Text-to-Speech" />
+        <StackPanel Margin="0,4,0,0" Orientation="Horizontal">
+            <TextBlock
+                VerticalAlignment="Center"
+                Style="{StaticResource TextBodyNormal}"
+                Text="Speak word limit:" />
+            <TextBox
+                x:Name="TtsSpeakWordLimitTextBox"
+                Width="60"
+                Height="26"
+                Margin="8,0,0,0"
+                HorizontalContentAlignment="Center"
+                VerticalContentAlignment="Center"
+                Background="White"
+                FontWeight="Medium"
+                Foreground="Black"
+                Style="{StaticResource TextBoxStyle1}"
+                TextChanged="TtsSpeakWordLimitTextBox_TextChanged" />
+            <TextBlock
+                x:Name="TtsWordLimitError"
+                Margin="12,0,0,0"
+                VerticalAlignment="Center"
+                Style="{StaticResource TextBodyNormal}"
+                Text="⚠ Must be a positive number"
+                Visibility="Collapsed" />
+        </StackPanel>
     </StackPanel>
 </Page>

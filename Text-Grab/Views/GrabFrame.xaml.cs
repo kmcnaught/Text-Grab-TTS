@@ -93,6 +93,7 @@ public partial class GrabFrame : Window
     private int translatedWordsCount = 0;
     private CancellationTokenSource? translationCancellationTokenSource;
     private const string TargetLanguageMenuHeader = "Target Language";
+    private string _lastSpokenFrameText = string.Empty;
 
     #endregion Fields
 
@@ -3473,6 +3474,18 @@ new GrabFrameOperationArgs()
         }
 
         FrameText = stringBuilder.ToString();
+
+        // Speak if TTS action is enabled, checked, and text has changed
+        ButtonInfo? speakAction = PostGrabActionManager.GetEnabledPostGrabActions()
+            .FirstOrDefault(a => a.ClickEvent == "SpeakText_Click");
+        if (speakAction is not null
+            && PostGrabActionManager.GetCheckState(speakAction)
+            && FrameText != _lastSpokenFrameText
+            && !string.IsNullOrWhiteSpace(FrameText))
+        {
+            _lastSpokenFrameText = FrameText;
+            Singleton<TtsService>.Instance.Speak(FrameText);
+        }
 
         if (IsFromEditWindow
             && destinationTextBox is not null

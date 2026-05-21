@@ -958,5 +958,17 @@ namespace Text_Grab.Properties {
                 this["RegisterOpenWith"] = value;
             }
         }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100")]
+        public int TtsSpeakWordLimit {
+            get {
+                return ((int)(this["TtsSpeakWordLimit"]));
+            }
+            set {
+                this["TtsSpeakWordLimit"] = value;
+            }
+        }
     }
 }

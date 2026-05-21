@@ -11,6 +11,7 @@
     Loaded="Page_Loaded"
     mc:Ignorable="d">
 
+    <ScrollViewer VerticalScrollBarVisibility="Visible">
     <StackPanel Margin="20,12,40,40" Orientation="Vertical">
         <TextBlock Style="{StaticResource TextHeader}" Text="Fullscreen Grab Settings" />
 
@@ -205,4 +206,5 @@
             Content="Manage Grab Templates..."
             ToolTip="Open editor to create, edit, and delete grab templates" />
     </StackPanel>
+    </ScrollViewer>
 </Page>

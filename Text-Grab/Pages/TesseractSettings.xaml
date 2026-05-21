@@ -12,6 +12,7 @@
     Loaded="Page_Loaded"
     mc:Ignorable="d">
 
+    <ScrollViewer VerticalScrollBarVisibility="Visible">
     <StackPanel Margin="20,12,40,40" Orientation="Vertical">
         <TextBlock Style="{StaticResource TextHeader}" Text="Tesseract Settings" />
         <ui:ToggleSwitch
@@ -116,4 +117,5 @@
             </TextBox>
         </StackPanel>
     </StackPanel>
+    </ScrollViewer>
 </Page>

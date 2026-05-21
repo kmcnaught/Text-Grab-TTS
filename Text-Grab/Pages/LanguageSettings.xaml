@@ -12,6 +12,7 @@
     Loaded="Page_Loaded"
     mc:Ignorable="d">
 
+    <ScrollViewer VerticalScrollBarVisibility="Visible">
     <StackPanel Margin="20,12,40,40" Orientation="Vertical">
         <TextBlock Style="{StaticResource TextHeader}" Text="Language Settings" />
         <TextBlock
@@ -224,4 +225,5 @@
                 TextWrapping="Wrap" />
         </StackPanel>
     </StackPanel>
+    </ScrollViewer>
 </Page>

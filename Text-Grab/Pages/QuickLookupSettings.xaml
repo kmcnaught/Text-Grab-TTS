@@ -10,6 +10,7 @@
     Loaded="Page_Loaded"
     mc:Ignorable="d">
 
+    <ScrollViewer VerticalScrollBarVisibility="Visible">
     <StackPanel Margin="20,12,40,40" Orientation="Vertical">
         <TextBlock Style="{StaticResource TextHeader}" Text="Quick Simple Lookup Settings" />
 
@@ -100,4 +101,5 @@
             Text="After pressing Enter to select, Quick Lookup closes and sends Ctrl+V to the previously focused app after this delay — giving you time to switch windows." />
 
     </StackPanel>
+    </ScrollViewer>
 </Page>

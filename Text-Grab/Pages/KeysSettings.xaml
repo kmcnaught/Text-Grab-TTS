@@ -85,6 +85,11 @@
                 KeySetChanged="ShortcutControl_KeySetChanged"
                 RecordingStarted="ShortcutControl_Recording"
                 ShortcutName="Open Clipboard Content" />
+            <controls:ShortcutControl
+                x:Name="SpShortcutControl"
+                KeySetChanged="ShortcutControl_KeySetChanged"
+                RecordingStarted="ShortcutControl_Recording"
+                ShortcutName="Speak Paragraph" />
         </StackPanel>
     </StackPanel>
     </ScrollViewer>

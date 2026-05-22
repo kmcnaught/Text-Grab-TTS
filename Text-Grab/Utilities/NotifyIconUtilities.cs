@@ -142,6 +142,13 @@ public static class NotifyIconUtilities
                     Singleton<HistoryService>.Instance.GetLastHistoryAsGrabFrame();
                 }));
                 break;
+            case ShortcutKeyActions.SpeakParagraph:
+                System.Windows.Application.Current.Dispatcher.Invoke(new Action(() =>
+                {
+                    SpeakParagraphOverlay overlay = new();
+                    overlay.Show();
+                }));
+                break;
             case ShortcutKeyActions.OpenClipboardContent:
                 System.Windows.Application.Current.Dispatcher.Invoke(new Action(() =>
                 {

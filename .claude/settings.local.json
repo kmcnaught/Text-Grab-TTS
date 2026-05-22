@@ -18,7 +18,9 @@
       "Bash(curl -o bin/pdm https://app.produckmap.com/cli/pdm)",
       "Bash(chmod +x bin/pdm)",
       "Bash(bin/pdm ui-element:*)",
-      "Bash(bin/pdm *)"
+      "Bash(bin/pdm *)",
+      "Bash(git checkout:*)",
+      "Bash(\"/mnt/c/Program Files/dotnet/dotnet.exe\" build Text-Grab/Text-Grab.csproj -p:EnableWindowsTargeting=true)"
     ],
     "deny": []
   }

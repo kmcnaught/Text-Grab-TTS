@@ -129,6 +129,7 @@ public partial class GeneralSettings : Page
         WebSearchersComboBox.SelectedItem = Singleton<WebSearchUrlModel>.Instance.DefaultSearcher;
 
         ShowToastCheckBox.IsChecked = DefaultSettings.ShowToast;
+        SpeakInsteadOfToastCheckBox.IsChecked = DefaultSettings.SpeakInsteadOfToast;
 
         RunInBackgroundChkBx.IsChecked = DefaultSettings.RunInTheBackground;
         ReadBarcodesBarcode.IsChecked = DefaultSettings.TryToReadBarcodes;
@@ -404,6 +405,22 @@ public partial class GeneralSettings : Page
             return;
 
         DefaultSettings.ShowToast = false;
+    }
+
+    private void SpeakInsteadOfToastCheckBox_Checked(object sender, RoutedEventArgs e)
+    {
+        if (!settingsSet)
+            return;
+
+        DefaultSettings.SpeakInsteadOfToast = true;
+    }
+
+    private void SpeakInsteadOfToastCheckBox_Unchecked(object sender, RoutedEventArgs e)
+    {
+        if (!settingsSet)
+            return;
+
+        DefaultSettings.SpeakInsteadOfToast = false;
     }
 
     private void WebSearchersComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)

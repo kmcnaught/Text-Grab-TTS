@@ -46,7 +46,19 @@ namespace Text_Grab.Properties {
                 this["ShowToast"] = value;
             }
         }
-        
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool SpeakInsteadOfToast {
+            get {
+                return ((bool)(this["SpeakInsteadOfToast"]));
+            }
+            set {
+                this["SpeakInsteadOfToast"] = value;
+            }
+        }
+
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Fullscreen")]

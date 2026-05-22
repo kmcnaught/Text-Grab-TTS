@@ -799,12 +799,16 @@ public partial class GrabFrame : Window
 
         CheckBottomRowButtonsVis();
 
+        Singleton<TtsService>.Instance.Drained += OnTtsDrained;
+
         if (historyItem is not null)
             await LoadContentFromHistory(historyItem);
     }
 
     public void GrabFrame_Unloaded(object sender, RoutedEventArgs e)
     {
+        Singleton<TtsService>.Instance.Drained -= OnTtsDrained;
+
         Activated -= GrabFrameWindow_Activated;
         Closed -= Window_Closed;
         Deactivated -= GrabFrameWindow_Deactivated;
@@ -3484,7 +3488,7 @@ new GrabFrameOperationArgs()
             && !string.IsNullOrWhiteSpace(FrameText))
         {
             _lastSpokenFrameText = FrameText;
-            Singleton<TtsService>.Instance.Speak(FrameText);
+            SpeakAndShowStopButton(FrameText);
         }
 
         if (IsFromEditWindow
@@ -3658,7 +3662,9 @@ new GrabFrameOperationArgs()
         if (!DefaultSettings.NeverAutoUseClipboard)
             try { Clipboard.SetDataObject(outputText, true); } catch { }
 
-        if (DefaultSettings.ShowToast)
+        if (DefaultSettings.SpeakInsteadOfToast)
+            SpeakAndShowStopButton(outputText);
+        else if (DefaultSettings.ShowToast)
             NotificationUtilities.ShowToast(outputText);
 
         if (CloseOnGrabMenuItem.IsChecked)
@@ -3689,11 +3695,30 @@ new GrabFrameOperationArgs()
         if (!DefaultSettings.NeverAutoUseClipboard)
             try { Clipboard.SetDataObject(trimmedSingleLineFrameText, true); } catch { }
 
-        if (DefaultSettings.ShowToast)
+        if (DefaultSettings.SpeakInsteadOfToast)
+            SpeakAndShowStopButton(trimmedSingleLineFrameText);
+        else if (DefaultSettings.ShowToast)
             NotificationUtilities.ShowToast(trimmedSingleLineFrameText);
 
         if (CloseOnGrabMenuItem.IsChecked)
             Close();
+    }
+
+    private void SpeakAndShowStopButton(string text)
+    {
+        Singleton<TtsService>.Instance.Speak(text);
+        StopSpeakingBTN.Visibility = Visibility.Visible;
+    }
+
+    private void OnTtsDrained()
+    {
+        Dispatcher.Invoke(() => StopSpeakingBTN.Visibility = Visibility.Collapsed);
+    }
+
+    private void StopSpeakingBTN_Click(object sender, RoutedEventArgs e)
+    {
+        Singleton<TtsService>.Instance.Stop();
+        StopSpeakingBTN.Visibility = Visibility.Collapsed;
     }
 
     private void ScrollBehaviorMenuItem_Click(object sender, RoutedEventArgs e)

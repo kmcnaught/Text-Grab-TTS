@@ -127,6 +127,17 @@
         <TextBlock Margin="0,4,0,0" Style="{StaticResource TextBodyNormal}">
             Clicking the notification opens the copied text into a new Edit Text Window to display and edit text.
         </TextBlock>
+        <ui:ToggleSwitch
+            Name="SpeakInsteadOfToastCheckBox"
+            Checked="SpeakInsteadOfToastCheckBox_Checked"
+            Unchecked="SpeakInsteadOfToastCheckBox_Unchecked">
+            <TextBlock Style="{StaticResource TextBodyNormal}">
+                Speak text instead of showing notification.
+            </TextBlock>
+        </ui:ToggleSwitch>
+        <TextBlock Margin="0,4,0,0" Style="{StaticResource TextBodyNormal}">
+            Speaks the grabbed text aloud rather than chiming a notification.
+        </TextBlock>
 
         <!--  default launch  -->
         <TextBlock

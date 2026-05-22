@@ -12,6 +12,11 @@ public class TtsService
     private ITtsEngine _engine = new WindowsSpeechEngine();
     private readonly Channel<string> _queue = Channel.CreateUnbounded<string>();
     private readonly CancellationTokenSource _cts = new();
+    private CancellationTokenSource _speechCts = new();
+    private int _pendingCount = 0;
+
+    public event Action? Drained;
+    public bool IsBusy => Volatile.Read(ref _pendingCount) > 0;
 
     public ITtsEngine Engine
     {
@@ -36,27 +41,42 @@ public class TtsService
                 text = string.Join(' ', words[..wordLimit]);
         }
 
+        Interlocked.Increment(ref _pendingCount);
         _queue.Writer.TryWrite(text);
+    }
+
+    public void Stop()
+    {
+        _speechCts.Cancel();
+        _speechCts = new CancellationTokenSource();
+
+        while (_queue.Reader.TryRead(out _))
+            Interlocked.Decrement(ref _pendingCount);
     }
 
     private async Task DrainLoopAsync()
     {
-        CancellationToken ct = _cts.Token;
+        CancellationToken lifecycleCt = _cts.Token;
         try
         {
-            await foreach (string text in _queue.Reader.ReadAllAsync(ct))
+            await foreach (string text in _queue.Reader.ReadAllAsync(lifecycleCt))
             {
                 try
                 {
-                    await _engine.SpeakAsync(text, ct);
+                    await _engine.SpeakAsync(text, _speechCts.Token);
                 }
                 catch (OperationCanceledException)
                 {
-                    break;
+                    // speech was stopped; continue so the loop can drain remaining items
                 }
                 catch (Exception)
                 {
                     // swallow per-item errors so the queue keeps draining
+                }
+                finally
+                {
+                    if (Interlocked.Decrement(ref _pendingCount) == 0)
+                        Drained?.Invoke();
                 }
             }
         }

@@ -69,9 +69,6 @@ public partial class FullscreenGrab
     private SelectionInteractionMode selectionInteractionMode = SelectionInteractionMode.None;
     private FsgSelectionStyle currentSelectionStyle = FsgSelectionStyle.Region;
     private bool isAwaitingAdjustAfterCommit = false;
-    private bool isAwaitingSecondClick = false;
-    private bool isSecondClickDrag = false;
-    private Point firstClickPoint = new();
     private bool suppressSelectionStyleComboBoxSelectionChanged = false;
 
     private FsgSelectionStyle CurrentSelectionStyle => currentSelectionStyle;
@@ -446,8 +443,6 @@ public partial class FullscreenGrab
         isSelecting = false;
         isShiftDown = false;
         isAwaitingAdjustAfterCommit = false;
-        isAwaitingSecondClick = false;
-        isSecondClickDrag = false;
         selectionInteractionMode = SelectionInteractionMode.None;
         clickedWindowCandidate = null;
         hoveredWindowCandidate = null;
@@ -602,21 +597,10 @@ public partial class FullscreenGrab
             : GetCursorForInteractionMode(interactionMode);
     }
 
-    private void UpdateTwoClickPreview(Point currentPoint)
-    {
-        double left = Math.Min(firstClickPoint.X, currentPoint.X);
-        double top = Math.Min(firstClickPoint.Y, currentPoint.Y);
-        double width = Math.Abs(firstClickPoint.X - currentPoint.X);
-        double height = Math.Abs(firstClickPoint.Y - currentPoint.Y);
-        ApplySelectionRect(new Rect(left, top, width, height));
-    }
-
     private void BeginRectangleSelection(MouseEventArgs e)
     {
-        bool wasAwaitingSecondClick = isAwaitingSecondClick;
         ResetSelectionVisualState();
-        isSecondClickDrag = wasAwaitingSecondClick;
-        clickedPoint = wasAwaitingSecondClick ? firstClickPoint : e.GetPosition(this);
+        clickedPoint = e.GetPosition(this);
         dpiScale = VisualTreeHelper.GetDpi(this);
         selectionInteractionMode = SelectionInteractionMode.CreatingRectangle;
         isSelecting = true;
@@ -775,8 +759,6 @@ public partial class FullscreenGrab
 
     private async Task FinalizeRectangleSelectionAsync()
     {
-        bool wasAwaitingSecondClick = isSecondClickDrag;
-
         EndSelectionInteraction();
 
         Rect selectionRect = GetCurrentSelectionRect();
@@ -795,17 +777,8 @@ public partial class FullscreenGrab
             return;
         }
 
-        if (isSmallClick && !wasAwaitingSecondClick)
-        {
-            // Enter two-click mode: first anchor click
-            firstClickPoint = clickedPoint;
-            isAwaitingSecondClick = true;
-            ApplySelectionRect(new Rect(firstClickPoint.X - 3, firstClickPoint.Y - 3, 6, 6));
-            return;
-        }
-
         FullscreenCaptureResult selection = CreateRectangleSelectionResult(CurrentSelectionStyle);
-        await CommitSelectionAsync(selection, isSmallClick && wasAwaitingSecondClick);
+        await CommitSelectionAsync(selection, isSmallClick);
     }
 
     private async Task FinalizeFreeformSelectionAsync()
@@ -1282,8 +1255,6 @@ public partial class FullscreenGrab
             case SelectionInteractionMode.None:
                 if (CurrentSelectionStyle == FsgSelectionStyle.AdjustAfter)
                     UpdateAdjustAfterCursor(movingPoint);
-                else if (isAwaitingSecondClick)
-                    UpdateTwoClickPreview(movingPoint);
                 break;
             default:
                 UpdateAdjustedSelection(movingPoint);

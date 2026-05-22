@@ -129,7 +129,6 @@ public partial class GeneralSettings : Page
         WebSearchersComboBox.SelectedItem = Singleton<WebSearchUrlModel>.Instance.DefaultSearcher;
 
         ShowToastCheckBox.IsChecked = DefaultSettings.ShowToast;
-        SpeakInsteadOfToastCheckBox.IsChecked = DefaultSettings.SpeakInsteadOfToast;
 
         RunInBackgroundChkBx.IsChecked = DefaultSettings.RunInTheBackground;
         ReadBarcodesBarcode.IsChecked = DefaultSettings.TryToReadBarcodes;
@@ -140,8 +139,6 @@ public partial class GeneralSettings : Page
         TryInsertCheckbox.IsChecked = DefaultSettings.TryInsert;
         InsertDelaySeconds = DefaultSettings.InsertDelay;
         SecondsTextBox.Text = InsertDelaySeconds.ToString("##.#", System.Globalization.CultureInfo.InvariantCulture);
-        TtsSpeakWordLimitTextBox.Text = DefaultSettings.TtsSpeakWordLimit.ToString();
-
         // Context menu integration - only available for unpackaged apps
         if (!AppUtilities.IsPackaged())
         {
@@ -179,28 +176,6 @@ public partial class GeneralSettings : Page
                 InsertDelaySeconds = 3;
                 DelayTimeErrorSeconds.Visibility = Visibility.Visible;
                 numberInputBox.BorderBrush = BadBrush;
-            }
-        }
-    }
-
-    private void TtsSpeakWordLimitTextBox_TextChanged(object sender, TextChangedEventArgs e)
-    {
-        if (!settingsSet)
-            return;
-
-        if (sender is System.Windows.Controls.TextBox textBox)
-        {
-            bool wasAbleToConvert = int.TryParse(textBox.Text, out int parsedValue);
-            if (wasAbleToConvert && parsedValue > 0)
-            {
-                DefaultSettings.TtsSpeakWordLimit = parsedValue;
-                TtsWordLimitError.Visibility = Visibility.Collapsed;
-                textBox.BorderBrush = GoodBrush;
-            }
-            else
-            {
-                TtsWordLimitError.Visibility = Visibility.Visible;
-                textBox.BorderBrush = BadBrush;
             }
         }
     }
@@ -405,22 +380,6 @@ public partial class GeneralSettings : Page
             return;
 
         DefaultSettings.ShowToast = false;
-    }
-
-    private void SpeakInsteadOfToastCheckBox_Checked(object sender, RoutedEventArgs e)
-    {
-        if (!settingsSet)
-            return;
-
-        DefaultSettings.SpeakInsteadOfToast = true;
-    }
-
-    private void SpeakInsteadOfToastCheckBox_Unchecked(object sender, RoutedEventArgs e)
-    {
-        if (!settingsSet)
-            return;
-
-        DefaultSettings.SpeakInsteadOfToast = false;
     }
 
     private void WebSearchersComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)

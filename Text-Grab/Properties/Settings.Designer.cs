@@ -982,5 +982,17 @@ namespace Text_Grab.Properties {
                 this["TtsSpeakWordLimit"] = value;
             }
         }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string TtsVoiceName {
+            get {
+                return ((string)(this["TtsVoiceName"]));
+            }
+            set {
+                this["TtsVoiceName"] = value;
+            }
+        }
     }
 }
